@@ -1712,7 +1712,7 @@ button[class*="carousel"] {
 
 .content > section:nth-of-type(even) .event-details p,
 .content > section:nth-of-type(even) .event-address {
-    color: #BFE0F3 !important;
+    color: #ffffff !important;
 }
 
 .content > section:nth-of-type(even) .event-title::before,
@@ -1753,3 +1753,175 @@ button[class*="carousel"] {
 }
 
 /* Portada (desktop): usar imagen por defecto y altura de la sección base */
+
+
+/* ===== Versículo en la portada (Cantares 8:6) ===== */
+.hero-overlay {
+    background: linear-gradient(to top, rgba(8, 32, 52, 0.72) 0%, rgba(8, 32, 52, 0.35) 28%, rgba(8, 32, 52, 0) 50%) !important;
+}
+.hero-verse {
+    position: absolute;
+    left: 50%;
+    bottom: 12vh;
+    transform: translateX(-50%);
+    width: min(92vw, 620px);
+    text-align: center;
+    color: #fff;
+    z-index: 3;
+    padding: 0 0.5rem;
+}
+.hero-verse-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+    line-height: 1.5;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+    margin: 0 0 0.6rem;
+}
+.hero-verse-ref {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(1.5rem, 3.4vw, 2rem);
+    color: #CDEBFA;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+.hero-text .scroll-indicator {
+    position: absolute;
+    left: 50%;
+    bottom: 3.5vh;
+    margin-left: -12px;
+    z-index: 3;
+}
+@media (max-width: 768px) {
+    .hero-verse { bottom: 13vh; }
+}
+
+/* ===== Mesa de regalos: cuentas con botón copiar ===== */
+.gift-account + .gift-account { margin-top: 0.85rem; }
+.gift-account .gift-holder {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.08rem;
+    color: #CDEBFA;
+}
+.gift-account .gift-bank { opacity: 0.85; }
+.gift-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.35rem;
+    color: #fff;
+    font-size: 1.12rem;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+}
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid hsl(var(--gold) / 0.7);
+    background: hsl(var(--gold) / 0.15);
+    color: #CDEBFA;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.copy-btn:hover { background: hsl(var(--gold) / 0.3); }
+.copy-btn:active { transform: scale(0.92); }
+.copy-btn.copied { background: #3E9BD6; color: #fff; border-color: #3E9BD6; }
+/* El versículo y el indicador se anclan a la portada completa (no al bloque central) */
+.hero-section .hero-content,
+.hero-section .hero-text { position: static !important; }
+@media (min-width: 769px) {
+    .hero-verse { bottom: 9vh; }
+}
+
+/* ===== Flores completas (sin recorte) y más pequeñas ===== */
+.section-divider img {
+    left: 50% !important;
+    width: min(520px, 78vw) !important;
+    height: auto !important;
+    object-fit: contain !important;
+    transform: translate(-50%, -50%) !important;
+}
+/* Espacio para que el separador no toque el contenido de la sección */
+.section-divider + section,
+.section-divider + footer { padding-top: 6rem !important; }
+@media (max-width: 768px) {
+    .section-divider + section,
+    .section-divider + footer { padding-top: 4.25rem !important; }
+}
+/* Espacio antes del separador */
+section:has(+ .section-divider) { padding-bottom: 5.5rem !important; }
+@media (max-width: 768px) {
+    section:has(+ .section-divider) { padding-bottom: 4rem !important; }
+}
+/* ===== Ramitas decorativas de líneas en las esquinas de cada sección ===== */
+.content > section,
+.content > footer {
+    position: relative;
+    isolation: isolate;
+}
+.content > section::before,
+.content > section::after,
+.content > footer::before,
+.content > footer::after {
+    content: "";
+    position: absolute;
+    width: 170px;
+    height: 218px;
+    z-index: -1;
+    pointer-events: none;
+    background: url('rama-esquina.png') no-repeat center / contain;
+    opacity: var(--deco-opacity, 0.75);
+}
+/* abajo-izquierda */
+.content > section::before,
+.content > footer::before { left: 6px; bottom: 6px; }
+/* arriba-derecha (rama girada) */
+.content > section::after,
+.content > footer::after { right: 6px; top: 6px; transform: rotate(180deg); }
+.deco-on-dark { --deco-opacity: 0.6; }
+@media (max-width: 768px) {
+    .content > section::before, .content > section::after,
+    .content > footer::before, .content > footer::after { width: 108px; height: 138px; }
+}
+
+/* Fondo claro cálido como en la referencia */
+.countdown-section, .gallery-section, .gifts-section { background-color: #ffffff !important; }
+/* Contraste del texto en las secciones azules */
+.deco-on-dark .event-details h4,
+.deco-on-dark .event-details p,
+.deco-on-dark .event-address,
+.deco-on-dark .event-punctuality,
+.deco-on-dark .section-subtitle { color: #ffffff !important; }
+.deco-on-dark .event-address { opacity: 0.9; }
+/* Ramitas más discretas en celular y en el contador */
+@media (max-width: 768px) {
+    .content > section::before, .content > section::after,
+    .content > footer::before, .content > footer::after { width: 86px; height: 110px; }
+    .countdown-section::before, .countdown-section::after { opacity: 0.45 !important; }
+}
+
+/* Nombres de los novios en la portada */
+.hero-names {
+    font-family: 'Great Vibes', cursive;
+    font-weight: 400;
+    font-size: clamp(3rem, 9vw, 5.2rem);
+    line-height: 1.05;
+    color: #ffffff;
+    margin: 0 0 0.6rem;
+    text-shadow: 0 3px 14px rgba(0, 0, 0, 0.55);
+}
+.hero-names span { color: #CDEBFA; padding: 0 0.15em; }
+
+/* Pie con los nombres: un poco más oscuro */
+.footer { background-color: #2B7DB5 !important; }
+
+/* Icono de WhatsApp sin el color forzado de la plantilla */
+.whatsapp-icon svg { color: inherit !important; fill: none !important; }
+.whatsapp-icon svg { width: 58px !important; height: 58px !important; }

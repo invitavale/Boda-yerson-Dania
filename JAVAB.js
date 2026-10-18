@@ -124,7 +124,7 @@ function updateMusicIcon() {
 
 // Countdown
 function initializeCountdown() {
-    const targetDate = new Date('2026-12-13T00:00:00-04:00').getTime();
+    const targetDate = new Date('2026-12-13T17:00:00-04:00').getTime();
     
     function updateCountdown() {
         const now = new Date().getTime();
@@ -303,7 +303,7 @@ function openLocation(location) {
     }
 }
 
-const PHOTO_ALBUM_URL = 'https://photos.app.goo.gl/p9PGQHWrvLG1Bpj28';
+const PHOTO_ALBUM_URL = 'https://photos.app.goo.gl/fX8AZDwSJXMa8cbKA';
 
 function sharePhotos() {
     // Abre el álbum compartido de Google Fotos en una pestaña nueva
@@ -362,7 +362,11 @@ function closeGiftModal(event) {
 }
 
 function confirmAttendance() {
-    window.open('https://docs.google.com/forms/d/e/1FAIpQLSdIYoM33yAkMmS4DZCRVmO9_IE0gZT4eEw8cV0r2PgWlYE0Ag/viewform?usp=header', '_blank', 'noopener');
+    const p = new URLSearchParams(window.location.search);
+    const quien = p.get('invitados') || (p.get('familia') ? 'Familia ' + p.get('familia') : '');
+    const msg = '¡Hola! ' + (quien ? 'Somos ' + quien + '. ' : '') + 'Confirmo mi asistencia a la boda de Yerson & Dania el domingo 13 de diciembre de 2026. 💙';
+    const url = 'https://wa.me/18294552618?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank', 'noopener');
 }
 
 // Sistema de Toast
@@ -456,3 +460,44 @@ function initializeGuestGreeting() {
     clearCaches();
   }
 })();
+
+
+// Copiar número de cuenta (mesa de regalos)
+function copyAccount(number, btn) {
+    const done = () => {
+        if (btn) {
+            btn.classList.add('copied');
+            setTimeout(() => btn.classList.remove('copied'), 1800);
+        }
+        showToast('¡Copiado!', 'Número de cuenta ' + number + ' copiado.');
+    };
+    const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = number;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, number.length); // iOS Safari
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(number).then(done).catch(fallback);
+    } else {
+        fallback();
+    }
+}
+
+// Ramitas de las esquinas: blancas en secciones de fondo azul, celestes en las claras
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.content > section, .content > footer').forEach(function (el) {
+        const m = getComputedStyle(el).backgroundColor.match(/\d+(\.\d+)?/g);
+        if (!m) return;
+        const [r, g, b] = m.map(Number);
+        const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        if (lum < 0.7) el.classList.add('deco-on-dark');
+    });
+});
