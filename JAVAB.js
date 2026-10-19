@@ -58,6 +58,9 @@ function enterWithoutMusicClick() {
 }
 
 function toggleMusic() {
+    enableMusic = true;
+    const mp = document.getElementById('musicPlayer');
+    if (mp) mp.classList.remove('needs-tap');
     if (isPlaying) pauseMusic(); else playMusic();
 }
 
@@ -98,10 +101,120 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCarousel();
     setupModalButtons();
     initializeGuestGreeting();
-
-    const modal = document.getElementById('welcomeModal');
-    if (modal) modal.style.display = 'flex';
+    initializeIntro();
 });
+
+// =========================================================
+// Intro: sobre animado
+// - Al tocar el sobre arrancan a la vez el video y la música
+//   (el toque es lo que permite el sonido en iPhone/Android)
+// - El video va sin sonido; al terminar entra la invitación
+// - El botón de música aparece al final para pausar/reanudar
+// =========================================================
+function initializeIntro() {
+    const intro = document.getElementById('intro');
+    const video = document.getElementById('introVideo');
+    if (!intro || !video) { showMusicPlayer(); return; }
+
+    let started = false, finished = false;
+
+    const finish = () => {
+        if (finished) return;
+        finished = true;
+        revealInvitation();
+    };
+
+    const start = () => {
+        if (started) return;
+        started = true;
+        intro.classList.add('is-playing');
+        intro.setAttribute('aria-label', 'Abriendo la invitación');
+
+        // Música: dentro del mismo toque, junto con el video
+        enableMusic = true;
+        playMusic();
+
+        video.muted = true;
+        const p = video.play();
+        if (p && p.catch) p.catch(() => finish());
+    };
+
+    intro.addEventListener('click', start);
+    intro.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(); }
+    });
+    video.addEventListener('ended', finish);
+    video.addEventListener('error', () => { if (started) finish(); });
+    // Seguro: si el video se traba, entrar igual
+    video.addEventListener('playing', () => {
+        const ms = ((video.duration || 8) - video.currentTime + 2.5) * 1000;
+        clearTimeout(video._safety);
+        video._safety = setTimeout(finish, ms);
+    });
+}
+
+function revealInvitation() {
+    const body = document.body;
+    window.scrollTo(0, 0);
+    body.classList.remove('intro-active');
+    void body.offsetWidth;
+    body.classList.add('is-revealing');
+    playSparkles(3200);
+
+    setTimeout(() => {
+        showMusicPlayer();
+        const mp = document.getElementById('musicPlayer');
+        if (mp) {
+            mp.classList.add('is-visible');
+            // Si el navegador no dejó sonar la música, el botón late para invitar a tocarlo
+            const audio = getAudio();
+            mp.classList.toggle('needs-tap', !!(audio && audio.paused));
+        }
+    }, 2400);
+
+    setTimeout(() => {
+        body.classList.add('intro-done');
+        const video = document.getElementById('introVideo');
+        if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+    }, 3600);
+}
+
+// Destellos que flotan durante la transición
+function playSparkles(duration) {
+    const canvas = document.getElementById('introSparkles');
+    if (!canvas || !canvas.getContext) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+    const count = Math.round(Math.min(70, Math.max(35, (w * h) / 12000)));
+    const parts = Array.from({ length: count }, () => {
+        const a = Math.random() * Math.PI * 2, sp = 0.25 + Math.random() * 1.1;
+        return { x: w / 2 + (Math.random() - 0.5) * w * 0.35, y: h * 0.46 + (Math.random() - 0.5) * h * 0.25,
+                 vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.5, r: 0.8 + Math.random() * 2.2,
+                 delay: Math.random() * 600, life: 1400 + Math.random() * 1600, hue: 200 + Math.random() * 16 };
+    });
+    const t0 = performance.now();
+    const frame = (now) => {
+        const t = now - t0;
+        ctx.clearRect(0, 0, w, h);
+        parts.forEach(p => {
+            const age = t - p.delay;
+            if (age < 0 || age > p.life) return;
+            const alpha = Math.sin(Math.PI * (age / p.life)) * 0.9;
+            const x = p.x + p.vx * age * 0.06, y = p.y + p.vy * age * 0.06;
+            const g = ctx.createRadialGradient(x, y, 0, x, y, p.r * 4);
+            g.addColorStop(0, `hsla(${p.hue}, 80%, 88%, ${alpha})`);
+            g.addColorStop(0.4, `hsla(${p.hue}, 70%, 65%, ${alpha * 0.45})`);
+            g.addColorStop(1, `hsla(${p.hue}, 70%, 60%, 0)`);
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, p.r * 4, 0, Math.PI * 2); ctx.fill();
+        });
+        if (t < duration) requestAnimationFrame(frame); else ctx.clearRect(0, 0, w, h);
+    };
+    requestAnimationFrame(frame);
+}
 
 function updateMusicIcon() {
     const volumeIcon = document.getElementById('volumeIcon');
@@ -396,48 +509,50 @@ function showToast(title, message) {
 //   ?familia=Arias
 function initializeGuestGreeting() {
     const params = new URLSearchParams(window.location.search);
+    const personasParam = parseInt(params.get('personas'), 10);
     const invitadosParam = params.get('invitados');
     const familiaParam = params.get('familia');
 
     const section = document.getElementById('guestSection');
     const badge = document.getElementById('guestBadge');
+    const title = document.getElementById('guestTitle');
     const subtitle = document.getElementById('guestSubtitle');
     const greeting = document.getElementById('guestGreeting');
     if (!section || !badge || !subtitle || !greeting) return;
 
     let names = [];
-
     if (invitadosParam) {
         names = invitadosParam.split(',').map(n => decodeURIComponent(n.trim())).filter(Boolean);
     } else if (familiaParam) {
         names = [`Familia ${familiaParam.trim()}`];
     }
 
-    if (names.length === 0) return;
+    // Total de personas: ?personas=N (1-6) o, si no viene, la cantidad de nombres
+    let total = (personasParam >= 1 && personasParam <= 20) ? personasParam : names.length;
+    if (!total) return;
 
-    // Badge con el total de invitados
-    badge.textContent = names.length;
+    const palabras = ['', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+    const palabra = palabras[total] || String(total);
 
-    // Subtítulo de acompañantes: solo tiene sentido cuando hay más de un
-    // nombre individual (no aplica al formato "Familia X")
-    const companions = invitadosParam ? names.length - 1 : 0;
-    if (companions > 0) {
-        subtitle.textContent = `(${companions} acompañante${companions > 1 ? 's' : ''})`;
-        subtitle.style.display = 'block';
-    } else {
-        subtitle.style.display = 'none';
-    }
+    badge.textContent = total;
+    if (title) title.textContent = total === 1 ? '¡Bienvenido!' : '¡Bienvenidos!';
 
-    // Limpiar contenido previo
+    subtitle.textContent = total === 1
+        ? 'Yerson & Dania te invitan con mucho cariño a celebrar su boda. Será un honor contar contigo.'
+        : 'Yerson & Dania los invitan con mucho cariño a celebrar su boda. Será un honor contar con ustedes.';
+    subtitle.style.display = 'block';
+
     greeting.innerHTML = '';
-
     names.forEach((name, index) => {
         const nameSpan = document.createElement('span');
-        const colorIndex = (index % 4) + 1;
-        nameSpan.className = `guest-name color-${colorIndex}`;
+        nameSpan.className = `guest-name color-${(index % 4) + 1}`;
         nameSpan.textContent = name;
         greeting.appendChild(nameSpan);
     });
+    const pase = document.createElement('span');
+    pase.className = 'guest-name guest-pass';
+    pase.textContent = total === 1 ? 'Invitación para una persona' : `Invitación para ${palabra} personas`;
+    greeting.appendChild(pase);
 
     section.style.display = 'block';
 }

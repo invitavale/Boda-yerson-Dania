@@ -78,7 +78,7 @@ html { background-color: #F1F8FD; }
     padding: 2.5rem 1.5rem;
     width: 100%;
     max-width: none;
-    margin: 1.5rem auto 0;
+    margin: 2.5rem auto 0;
 }
 .guest-badge {
     width: 3rem; height: 3rem;
@@ -88,7 +88,7 @@ html { background-color: #F1F8FD; }
     font-family: 'Playfair Display', serif;
     font-weight: 700; font-size: 1.25rem;
     color: #fff;
-    background: hsl(var(--brown-dark));
+    background: #1D5B87;
 }
 .guest-title {
     font-family: 'Great Vibes', cursive;
@@ -1925,3 +1925,63 @@ section:has(+ .section-divider) { padding-bottom: 5.5rem !important; }
 /* Icono de WhatsApp sin el color forzado de la plantilla */
 .whatsapp-icon svg { color: inherit !important; fill: none !important; }
 .whatsapp-icon svg { width: 58px !important; height: 58px !important; }
+
+/* =========================================================
+   Intro: sobre animado azul
+   ========================================================= */
+body.intro-active { overflow: hidden; }
+.intro {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #3E9BD6 url('sobre-poster.jpg') center / cover no-repeat;
+    cursor: pointer; outline: none;
+    transition: opacity 1.3s ease;
+}
+.intro-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.intro-hint {
+    position: absolute; left: 50%; bottom: 9vh; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: .6rem;
+    padding: .7rem 1.4rem; border-radius: 999px;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.45);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    color: #fff; font-family: 'Playfair Display', serif; font-size: 1.05rem; letter-spacing: .06em;
+    white-space: nowrap;
+    animation: introPulse 2.2s ease-in-out infinite;
+    transition: opacity .5s ease;
+}
+.intro-hint-dot { width: 8px; height: 8px; border-radius: 50%; background: #A9D8F2; box-shadow: 0 0 10px #A9D8F2; }
+@keyframes introPulse { 0%,100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } }
+.intro.is-playing { cursor: default; }
+.intro.is-playing .intro-hint { opacity: 0; pointer-events: none; }
+.intro-veil {
+    position: fixed; inset: 0; z-index: 10000; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle at 50% 46%, #ffffff 0%, #EEF7FD 45%, #CFE8F7 100%);
+}
+.intro-sparkles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10001; pointer-events: none; }
+body:not(.intro-active):not(.is-revealing) .intro-veil { display: none; }
+body.is-revealing .intro { opacity: 0; pointer-events: none; }
+body.is-revealing .intro-veil { animation: introVeil 3.4s ease forwards; }
+body.is-revealing .hero-section { animation: heroReveal 2.6s ease .3s both; }
+@keyframes introVeil { 0% { opacity: 1; } 35% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes heroReveal { from { transform: scale(1.06); filter: blur(6px); } to { transform: none; filter: none; } }
+body.intro-done .intro, body.intro-done .intro-veil, body.intro-done .intro-sparkles { display: none; }
+
+/* Botón de música: aparece suave y late si hay que tocarlo para que suene */
+.music-player.is-visible { animation: musicIn .6s ease both; }
+@keyframes musicIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.music-player.needs-tap .music-button { animation: musicPulse 1.6s ease-in-out infinite; }
+@keyframes musicPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(62,155,214,0.6); } 50% { box-shadow: 0 0 0 12px rgba(62,155,214,0); } }
+@media (prefers-reduced-motion: reduce) {
+    .intro-hint, .music-player.needs-tap .music-button, .music-player.is-visible { animation: none; }
+    body.is-revealing .hero-section { animation: none; }
+}
+
+/* Chip de la invitación (número de personas) */
+.guest-name.guest-pass {
+    background: #BFE0F3; color: #1D5B87;
+    font-style: italic; letter-spacing: .02em;
+    padding: .6rem 1.4rem;
+}
+
+/* Bienvenida sin tarjeta: directo sobre el fondo, como el diseño de referencia */
+.guest-section { background: transparent; border: 0; box-shadow: none; padding: 1.5rem 1rem 0; }
+.guest-subtitle { margin: 1.5rem auto 0; max-width: 24rem; line-height: 1.6; color: #1D5B87; font-size: 1rem; }

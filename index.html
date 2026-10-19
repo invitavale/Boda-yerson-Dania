@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="audio" href="musica.mp3" type="audio/mpeg">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="CCSB.css?v=32">
+    <link rel="preload" as="image" href="sobre-poster.jpg">
+    <link rel="stylesheet" href="CCSB.css?v=33">
         <style>
         /* Carrusel: 3 imágenes simultáneamente con foto central destacada */
         .carousel-track-container {
@@ -195,19 +196,18 @@
 
     </style>
 </head>
-<body>
+<body class="intro-active">
     <div class="main-center">
-        <!-- Modal de Bienvenida -->
-        <div id="welcomeModal" class="modal-overlay">
-            <div class="welcome-hero">
-                <h1 class="welcome-title welcome-title-sm">Bienvenidos a la<br/>invitación de<br/>Yerson &amp; Dania</h1>
-                <p class="welcome-note">La música de fondo es parte de la experiencia</p>
-                <div class="welcome-actions">
-                    <button id="enterWithMusic" class="btn-gold"><span id="enterWithMusicLabel">Ingresar con música</span></button>
-                    <button id="enterWithoutMusic" class="btn-gold-outline">Ingresar sin música</button>
-                </div>
+        <!-- Intro: sobre animado (toca para abrir) -->
+        <div id="intro" class="intro" role="button" tabindex="0" aria-label="Toca para abrir la invitación">
+            <video id="introVideo" class="intro-video" src="sobre.mp4" poster="sobre-poster.jpg" muted playsinline webkit-playsinline preload="auto"></video>
+            <div class="intro-hint">
+                <span class="intro-hint-dot"></span>
+                Toca para abrir
             </div>
         </div>
+        <div class="intro-veil" aria-hidden="true"></div>
+        <canvas id="introSparkles" class="intro-sparkles" aria-hidden="true"></canvas>
 
         <!-- Reproductor de música -->
         <div id="musicPlayer" class="music-player" style="display: none;">
@@ -251,12 +251,6 @@
         </div>
         <!-- Countdown -->
         <section class="countdown-section">
-            <div id="guestSection" class="guest-section" style="display:none;">
-                <div id="guestBadge" class="guest-badge">0</div>
-                <h2 class="guest-title">¡Bienvenidos!</h2>
-                <p id="guestSubtitle" class="guest-subtitle" style="display:none;"></p>
-                <div id="guestGreeting" class="guest-greeting"></div>
-            </div>
             <h2 class="section-title">Falta</h2>
             <div class="countdown-container">
                 <div class="countdown-item">
@@ -275,6 +269,12 @@
                     <div class="countdown-number" id="seconds">00</div>
                     <div class="countdown-label">SEGUNDOS</div>
                 </div>
+            </div>
+            <div id="guestSection" class="guest-section" style="display:none;">
+                <div id="guestBadge" class="guest-badge">0</div>
+                <h2 id="guestTitle" class="guest-title">¡Bienvenidos!</h2>
+                <div id="guestGreeting" class="guest-greeting"></div>
+                <p id="guestSubtitle" class="guest-subtitle" style="display:none;"></p>
             </div>
         </section>
 
@@ -513,6 +513,6 @@
             } catch(e) {}
         })();
         </script>
-        <script src="JAVAB.js?v=22" defer></script>
+        <script src="JAVAB.js?v=23" defer></script>
 </body>
 </html>
