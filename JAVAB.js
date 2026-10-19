@@ -555,6 +555,9 @@ function initializeGuestGreeting() {
     greeting.appendChild(pase);
 
     section.style.display = 'block';
+    const block = document.getElementById('guestBlock');
+    if (block) block.style.display = 'block';
+    document.querySelectorAll('.guest-divider').forEach(d => d.style.display = '');
 }
 
 // Forzar limpieza de caches en clientes antiguos
