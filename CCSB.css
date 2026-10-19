@@ -1985,3 +1985,9 @@ body.intro-done .intro, body.intro-done .intro-veil, body.intro-done .intro-spar
 /* Bienvenida sin tarjeta: directo sobre el fondo, como el diseño de referencia */
 .guest-section { background: transparent; border: 0; box-shadow: none; padding: 1.5rem 1rem 0; }
 .guest-subtitle { margin: 1.5rem auto 0; max-width: 24rem; line-height: 1.6; color: #1D5B87; font-size: 1rem; }
+
+/* Bloque de bienvenida: fondo claro como el conteo regresivo */
+div.guest-block { position: relative; width: 100%; text-align: center; box-shadow: 0 8px 24px -8px rgba(0,0,0,0.08); background-color: #F1F8FD !important; background-image: none !important; padding-top: 6rem !important; padding-bottom: 5.5rem !important; }
+div.guest-block .guest-title { color: #3E9BD6 !important; }
+div.guest-block .guest-subtitle { color: #1D5B87 !important; }
+@media (max-width: 768px) { div.guest-block { padding-top: 4.25rem !important; padding-bottom: 4rem !important; } }
