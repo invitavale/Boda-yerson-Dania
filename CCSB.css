@@ -2087,3 +2087,24 @@ div.guest-block .guest-subtitle { color: #1D5B87 !important; }
     .gift-table { grid-template-columns: 8.4rem 1fr; }
     .gift-value { padding-left: 0.6rem; }
 }
+
+/* ===== Tarjetas de Detalles: mismo estilo papel crema ===== */
+.party-section .party-card {
+    background: #f1ede6 !important;
+    border: 1px solid rgba(0,0,0,0.08) !important;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.18) !important;
+}
+.party-section .party-card h3 {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 1.1rem !important;
+    color: #111 !important;
+}
+.party-section .party-card p {
+    font-family: 'Playfair Display', serif;
+    color: #222 !important;
+    line-height: 1.6;
+}
+.party-section .party-card .party-icon { background-color: transparent !important; }
