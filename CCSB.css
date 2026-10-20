@@ -310,7 +310,7 @@ html { background-color: #F1F8FD; }
     width: 100%;
     height: 100vh;
     height: 100svh; /* soporta barras de navegador móviles */
-    background-image: url('foto0.jpg');
+    background-image: url('portada.jpg');
     background-size: cover;
     background-position: center 25%;
     background-repeat: no-repeat;
