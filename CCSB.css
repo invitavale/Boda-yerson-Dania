@@ -1991,3 +1991,99 @@ div.guest-block { position: relative; width: 100%; text-align: center; box-shado
 div.guest-block .guest-title { color: #3E9BD6 !important; }
 div.guest-block .guest-subtitle { color: #1D5B87 !important; }
 @media (max-width: 768px) { div.guest-block { padding-top: 4.25rem !important; padding-bottom: 4rem !important; } }
+
+/* ===== Portada: "Nos casamos" ===== */
+.hero-we-marry {
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase;
+    letter-spacing: 0.38em;
+    font-size: clamp(0.85rem, 2.4vw, 1.15rem);
+    color: #CDEBFA;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+    margin: 0 0 0.2rem;
+    padding-left: 0.38em; /* compensa el espaciado final para centrar */
+}
+
+/* ===== Mesa de regalos: tarjeta tipo papel ===== */
+.dresscode-modal.gift-paper {
+    max-width: 460px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #f1ede6;
+    border: 1px solid rgba(0,0,0,0.08);
+    color: #1a1a1a;
+    padding: 2.4rem 1.6rem 2rem;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+.gift-paper .modal-close { color: #1a1a1a; }
+.gift-paper-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #111;
+    line-height: 1;
+    font-size: clamp(2.6rem, 11vw, 3.4rem);
+    margin: 0 0 1.6rem;
+}
+.gift-paper-title span {
+    display: block;
+    letter-spacing: 0.2em;
+    font-size: 0.58em;
+    margin-bottom: 0.1em;
+}
+.gift-paper-text {
+    font-family: 'Playfair Display', serif;
+    color: #222;
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    margin: 0 0 1.8rem;
+}
+.gift-paper-sub {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 1.05rem;
+    color: #111;
+    margin: 0 auto 1.2rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid #111;
+    width: fit-content;
+}
+.gift-table {
+    display: grid;
+    grid-template-columns: 9.4rem 1fr;
+    width: min(100%, 21.5rem);
+    margin: 0 auto 1.6rem;
+    text-align: left;
+}
+.gift-table + .gift-table { padding-top: 1.2rem; border-top: 1px dashed rgba(0,0,0,0.2); }
+.gift-row { display: contents; }
+.gift-label, .gift-value {
+    font-family: 'Playfair Display', serif;
+    color: #222;
+    font-size: 0.98rem;
+    letter-spacing: 0.03em;
+    padding: 0.28rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.gift-label { padding-right: 0.6rem; border-right: 1px solid #111; }
+.gift-value { padding-left: 1rem; }
+.gift-num { font-variant-numeric: tabular-nums; }
+.gift-paper .copy-btn {
+    width: 30px; height: 30px;
+    border-color: #111;
+    background: transparent;
+    color: #111;
+}
+.gift-paper .copy-btn:hover { background: rgba(0,0,0,0.08); }
+.gift-paper .copy-btn.copied { background: #3E9BD6; color: #fff; border-color: #3E9BD6; }
+@media (max-width: 400px) {
+    .gift-label, .gift-value { font-size: 0.86rem; }
+    .gift-table { grid-template-columns: 8.4rem 1fr; }
+    .gift-value { padding-left: 0.6rem; }
+}
